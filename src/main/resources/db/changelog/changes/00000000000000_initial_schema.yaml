@@ -1,0 +1,22 @@
+databaseChangeLog:
+  -  changeSet:
+       id: 00000000000000_initial_schema
+       author:  oswaldo
+       changes:
+         -  createTable:
+              tableName:  image
+              columns:
+                -  column:
+                     name:  id
+                     type:  uuid
+                     constraints:
+                       primaryKey:  true
+                       nullable:  false
+                -  column:
+                     name:  description
+                     type:  text
+                -  column:
+                     name:  type
+                     type:  int
+                     constraints:
+                       nullable: false

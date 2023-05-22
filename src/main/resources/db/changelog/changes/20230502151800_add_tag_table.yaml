@@ -1,0 +1,19 @@
+databaseChangeLog:
+  -  changeSet:
+       id: 20230502151800_add_tag_table
+       author:  oswaldo
+       changes:
+         -  createTable:
+              tableName:  tag
+              columns:
+                -  column:
+                     name:  id
+                     type:  int
+                     constraints:
+                       primaryKey:  true
+                       nullable:  false
+                -  column:
+                     name:  name
+                     type:  text
+                     constraints:
+                       nullable: false

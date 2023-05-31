@@ -22,12 +22,17 @@ public class TagService {
     }
 
     public List<Tag> findAllByIds(List<Integer> ids) {
-        log.info("Serching for tags with ids {}", ids);
+        log.info("Searching for tags with ids {}", ids);
         return repository.findAllById(ids);
     }
 
     public void saveAllTags(List<Tag> tags) {
         repository.saveAll(tags);
+    }
+
+    public Tag saveTag(Tag tag) {
+        log.info("Saving tag = {}", tag);
+        return repository.save(tag);
     }
 
 }

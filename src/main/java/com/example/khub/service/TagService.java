@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Set;
 
 @Service
 @Slf4j
@@ -16,12 +15,7 @@ public class TagService {
     @Autowired
     private TagRepository repository;
 
-    public Set<Tag> findAllByName(String name) {
-        log.info("Searching for ids {}", name);
-        return repository.findAllByName(name);
-    }
-
-    public List<Tag> findAllByIds(List<Integer> ids) {
+    public List<Tag> findAllByIds(List<Long> ids) {
         log.info("Searching for tags with ids {}", ids);
         return repository.findAllById(ids);
     }

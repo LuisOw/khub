@@ -8,7 +8,7 @@ databaseChangeLog:
               columns:
                 -  column:
                      name:  id
-                     type:  int
+                     type:  bigint
                      constraints:
                        primaryKey:  true
                        nullable:  false
@@ -17,3 +17,11 @@ databaseChangeLog:
                      type:  text
                      constraints:
                        nullable: false
+         -  addAutoIncrement:
+              columnDataType:  bigint
+              columnName:  id
+              defaultOnNull:  false
+              generationType:  ALWAYS
+              incrementBy:  1
+              schemaName:  public
+              tableName:  tag

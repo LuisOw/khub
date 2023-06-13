@@ -1,0 +1,22 @@
+databaseChangeLog:
+  -  changeSet:
+      id: 20230531110200_add_image_tag_join_table
+      author:  oswaldo
+      changes:
+      -  createTable:
+          tableName: image_tag
+          columns:
+          -  column:
+              name: image_id
+              type: uuid
+              constraints:
+               primaryKey: true
+               primaryKeyName: PK_IMAGE_TAG
+               nullable: false
+          -  column:
+              name: tag_id
+              type: bigint
+              constraints:
+               primaryKey: true
+               primaryKeyName: PK_IMAGE_TAG
+               nullable: false

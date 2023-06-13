@@ -27,8 +27,8 @@ public class Image {
 
     @ManyToMany
     @JoinTable(name = "image_tag",
-    joinColumns = @JoinColumn(name = "image_id"),
-    inverseJoinColumns = @JoinColumn(name = "tag_id"))
+            joinColumns = @JoinColumn(name = "image_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private Set<Tag> tags;
 
     public Image id(UUID id) {

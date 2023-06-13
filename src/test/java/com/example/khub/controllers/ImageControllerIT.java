@@ -15,13 +15,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.oauth2.core.user.OAuth2UserAuthority;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oauth2Login;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -93,11 +97,15 @@ public class ImageControllerIT {
     @Test
     public void postImage() throws Exception {
         ImageDto imageDto = ImageDto.fromSource(new Image().description("Description"));
-        imageDto.setTags(List.of(1, 2));
+        imageDto.setTags(List.of(1L, 2L));
+        Map<String, Object> map = new HashMap<>();
+        map.put("login", "user");
         String inputJson = objectMapper.writeValueAsString(imageDto);
         mockMvc.perform(post("/api/images")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(inputJson))
+                        .content(inputJson)
+                        .with(oauth2Login().authorities(new OAuth2UserAuthority(map)))
+                )
                 .andExpect(status().isCreated())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON));
 

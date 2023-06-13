@@ -26,10 +26,11 @@ dependencies {
 	implementation 'org.hibernate:hibernate-validator:8.0.0.Final'
 	implementation 'org.hibernate:hibernate-core:6.2.1.Final'
 	implementation 'org.modelmapper:modelmapper:3.1.1'
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client:3.1.0'
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-
+	implementation 'com.c4-soft.springaddons:spring-addons-oauth2-test:6.1.11'
 }
 
 tasks.named('test') {

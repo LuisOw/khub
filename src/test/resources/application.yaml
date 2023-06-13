@@ -1,0 +1,18 @@
+logging:
+  level.org.hibernate:
+    SQL: DEBUG
+    type.descriptor.sql.BasicBinder: TRACE
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5433/image-test
+    username: test
+    password: test
+    driver-class-name: org.postgresql.Driver
+  jpa.database-platform: org.hibernate.dialect.PostgreSQLDialect
+  security:
+    oauth2:
+      client:
+        registration:
+          github:
+            clientId: ${GITHUB_CLIENT_ID}
+            clientSecret: ${GITHUB_CLIENT_SECRET}

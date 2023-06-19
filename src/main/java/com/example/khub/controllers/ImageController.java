@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.UUID;
@@ -43,11 +44,12 @@ public class ImageController {
     }
 
     @PostMapping
-    public ResponseEntity<ImageDto> postImage(@RequestBody ImageDto imageDto) {
+    public ResponseEntity<ImageDto> postImage(@RequestParam("file") MultipartFile file,
+                                              @RequestParam("description") String description,
+                                              @RequestParam("tags") List<Long> tagsIds) {
         log.info("Post request to images");
-        List<Tag> tags = tagService.findAllByIds(imageDto.getTags());
-        Image newImage = ImageDto.toSource(imageDto);
-        ImageDto returnImage = modelMapper.map(imageService.createImage(newImage.tags(tags)), ImageDto.class);
+        List<Tag> tags = tagService.findAllByIds(tagsIds);
+        ImageDto returnImage = modelMapper.map(imageService.createImage(description, tags, file), ImageDto.class);
         return new ResponseEntity<>(returnImage, HttpStatus.CREATED);
     }
 }

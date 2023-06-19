@@ -31,6 +31,12 @@ public class Image {
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private Set<Tag> tags;
 
+    public Image(String description, List<Tag> tags) {
+        this.id = UUID.randomUUID();
+        this.description = description;
+        this.tags.addAll(tags);
+    }
+
     public Image id(UUID id) {
         this.id = id;
         return this;

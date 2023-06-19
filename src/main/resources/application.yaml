@@ -3,6 +3,7 @@ logging:
     org:
       springframework:
         security: DEBUG
+
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/khub
@@ -17,3 +18,11 @@ spring:
           github:
             clientId: ${GITHUB_CLIENT_ID}
             clientSecret: ${GITHUB_CLIENT_SECRET}
+
+amazon:
+  aws:
+    s3:
+      access-key: ${S3_ACCESS_KEY}
+      secret-key: ${S3_SECRET_KEY}
+      bucket-name: ${S3_BUCKET_NAME}
+      region: us-east-2

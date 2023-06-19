@@ -3,7 +3,9 @@ package com.example.khub.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -11,6 +13,7 @@ import java.util.UUID;
 
 @Data
 @Entity
+@NoArgsConstructor
 @Table(name = "image")
 public class Image {
 
@@ -29,7 +32,7 @@ public class Image {
     @JoinTable(name = "image_tag",
             joinColumns = @JoinColumn(name = "image_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
-    private Set<Tag> tags;
+    private Set<Tag> tags = new HashSet<>();
 
     public Image(String description, List<Tag> tags) {
         this.id = UUID.randomUUID();

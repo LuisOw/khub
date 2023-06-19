@@ -11,7 +11,8 @@ import java.util.UUID;
 public class ImageDto {
     private UUID id;
     private String description;
-    private List<Long> tags;
+    private List<TagDto> tags;
+    private String presignedUrl;
 
     public static ImageDto fromSource(Image image) {
         ImageDto imageDto = new ImageDto();

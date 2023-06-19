@@ -1,5 +1,6 @@
 package com.example.khub.service;
 
+import com.example.khub.dto.ImageDto;
 import com.example.khub.error.exceptions.ImageNotFoundException;
 import com.example.khub.model.Image;
 import com.example.khub.model.Tag;
@@ -36,7 +37,8 @@ public class ImageService {
     }
 
     public Image createImage(String description, List<Tag> tags, MultipartFile file) {
-        Image image = new Image(description, tags);
+        log.info("Creating image with description {}, and tags {}", description, tags);
+        Image image = repository.saveAndFlush(new Image(description, tags));
         Map<String, String> metadata = new HashMap<>();
         metadata.put(HttpHeaders.CONTENT_TYPE, file.getContentType());
         metadata.put(HttpHeaders.CONTENT_LENGTH, String.valueOf(file.getSize()));
@@ -45,7 +47,12 @@ public class ImageService {
         } catch (IOException e) {
             throw new IllegalStateException("Failed to upload to S3", e);
         }
-        return repository.saveAndFlush(image);
+        return image;
+    }
+
+    public ImageDto addPresignedUrl(ImageDto imageDto) {
+        imageDto.setPresignedUrl(imageStore.generatePresignedUrl(imageDto.getId().toString()));
+        return imageDto;
     }
 
 }

@@ -8,6 +8,7 @@ import org.springframework.beans.BeanUtils;
 public class TagDto {
 
     private String name;
+    private Long id;
 
     public static Tag toSource(TagDto tagDto) {
         Tag tag = new Tag();

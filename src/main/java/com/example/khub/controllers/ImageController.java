@@ -32,7 +32,11 @@ public class ImageController {
     @GetMapping
     public ResponseEntity<List<ImageDto>> getImages() {
         log.info("Get request to images");
-        var dtoList = imageService.findAll().stream().map(image -> modelMapper.map(image, ImageDto.class)).toList();
+        var dtoList = imageService.findAll()
+                .stream()
+                .map(image -> modelMapper.map(image, ImageDto.class))
+                .map(imageService::addPresignedUrl)
+                .toList();
         return ResponseEntity.ok(dtoList);
     }
 
@@ -52,4 +56,7 @@ public class ImageController {
         ImageDto returnImage = modelMapper.map(imageService.createImage(description, tags, file), ImageDto.class);
         return new ResponseEntity<>(returnImage, HttpStatus.CREATED);
     }
+
+//    @DeleteMapping
+//    public ResponseEntity<Void> deleteImage()
 }

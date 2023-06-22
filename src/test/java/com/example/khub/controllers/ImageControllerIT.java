@@ -1,10 +1,10 @@
 package com.example.khub.controllers;
 
-import com.example.khub.dto.ImageDto;
 import com.example.khub.error.exceptions.ImageNotFoundException;
 import com.example.khub.model.Image;
 import com.example.khub.repository.ImageRepository;
 import com.example.khub.service.ImageService;
+import com.example.khub.service.ImageStore;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,20 +14,18 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.security.oauth2.core.user.OAuth2UserAuthority;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oauth2Login;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @ExtendWith(SpringExtension.class)
@@ -49,6 +47,9 @@ public class ImageControllerIT {
 
     @Autowired
     private ImageService service;
+
+    @MockBean
+    private ImageStore imageStore;
 
     @BeforeEach
     @AfterEach
@@ -83,7 +84,7 @@ public class ImageControllerIT {
     }
 
     @Test
-    public void getImageByNonexistentId() throws Exception {
+    public void getImageWithNonexistentId() throws Exception {
         Image image1 = new Image().id(UUID.randomUUID()).description("Test");
         imageRepository.saveAndFlush(image1);
         UUID randomId = UUID.randomUUID();
@@ -95,15 +96,16 @@ public class ImageControllerIT {
     }
 
     @Test
-    public void postImage() throws Exception {
-        ImageDto imageDto = ImageDto.fromSource(new Image().description("Description"));
-        imageDto.setTags(List.of(1L, 2L));
+    public void postImageAuthenticated() throws Exception {
+        MockMultipartFile file = new MockMultipartFile("file", "hello.txt",
+                MediaType.MULTIPART_FORM_DATA_VALUE, "Testing with String".getBytes());
         Map<String, Object> map = new HashMap<>();
         map.put("login", "user");
-        String inputJson = objectMapper.writeValueAsString(imageDto);
-        mockMvc.perform(post("/api/images")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(inputJson)
+        String description = "Description of image";
+        mockMvc.perform(multipart("/api/images")
+                        .file(file)
+                        .param("description", description)
+                        .param("tags", "1", "2")
                         .with(oauth2Login().authorities(new OAuth2UserAuthority(map)))
                 )
                 .andExpect(status().isCreated())
@@ -112,6 +114,22 @@ public class ImageControllerIT {
         List<Image> allImages = imageRepository.findAll();
         assertThat(allImages.size()).isEqualTo(1);
         Image createdImage = allImages.get(0);
-        assertThat(createdImage.getDescription()).isEqualTo(imageDto.getDescription());
+        assertThat(createdImage.getDescription()).isEqualTo(description);
+    }
+
+    @Test
+    public void postImageUnauthenticated() throws Exception {
+        MockMultipartFile file = new MockMultipartFile("file", "hello.txt",
+                MediaType.MULTIPART_FORM_DATA_VALUE, "Testing with String".getBytes());
+        String description = "Description of image";
+        mockMvc.perform(multipart("/api/images")
+                        .file(file)
+                        .param("description", description)
+                        .param("tags", "1", "2")
+                )
+                .andExpect(status().isFound());
+
+        List<Image> allImages = imageRepository.findAll();
+        assertThat(allImages.size()).isZero();
     }
 }

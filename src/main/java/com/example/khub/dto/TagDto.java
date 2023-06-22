@@ -1,10 +1,12 @@
 package com.example.khub.dto;
 
 import com.example.khub.model.Tag;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.beans.BeanUtils;
 
 @Data
+@AllArgsConstructor
 public class TagDto {
 
     private String name;

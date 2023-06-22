@@ -16,3 +16,9 @@ spring:
           github:
             clientId: ${GITHUB_CLIENT_ID}
             clientSecret: ${GITHUB_CLIENT_SECRET}
+amazon:
+  aws:
+    s3:
+      endpoint: http://khub-localstack.s3.localhost.localstack.cloud:4566/
+      region: us-east-2
+      bucket-name: khub-localstack

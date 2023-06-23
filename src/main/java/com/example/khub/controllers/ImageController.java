@@ -57,6 +57,10 @@ public class ImageController {
         return new ResponseEntity<>(returnImage, HttpStatus.CREATED);
     }
 
-//    @DeleteMapping
-//    public ResponseEntity<Void> deleteImage()
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteImage(@PathVariable UUID id) {
+        log.info("Deleting image with id {}", id);
+        imageService.deleteImage(id);
+        return new ResponseEntity<>(HttpStatus.ACCEPTED);
+    }
 }

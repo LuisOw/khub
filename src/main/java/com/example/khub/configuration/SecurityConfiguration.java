@@ -17,6 +17,7 @@ public class SecurityConfiguration {
         http
                 .authorizeHttpRequests(auth -> auth.requestMatchers(HttpMethod.GET).permitAll())
                 .authorizeHttpRequests(auth -> auth.requestMatchers(HttpMethod.POST).hasAuthority("OAUTH2_USER"))
+                .authorizeHttpRequests(auth -> auth.requestMatchers(HttpMethod.DELETE).hasAuthority("OAUTH2_USER"))
                 .csrf().disable()
                 .oauth2Login();
         return http.build();

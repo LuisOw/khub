@@ -55,4 +55,10 @@ public class ImageService {
         return imageDto;
     }
 
+    public void deleteImage(UUID id) {
+        repository.findById(id).ifPresentOrElse(image -> repository.delete(image), () -> {
+            throw new ImageNotFoundException(String.format(ImageNotFoundException.MESSAGE, id));
+        });
+    }
+
 }

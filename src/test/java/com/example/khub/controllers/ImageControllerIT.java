@@ -132,4 +132,36 @@ public class ImageControllerIT {
         List<Image> allImages = imageRepository.findAll();
         assertThat(allImages.size()).isZero();
     }
+
+    @Test
+    public void deleteImageByIdUnauthenticated() throws Exception {
+        Image image1 = new Image().id(UUID.randomUUID()).description("Test");
+        image1 = imageRepository.saveAndFlush(image1);
+
+        mockMvc.perform(delete("/api/images/{id}", image1.getId())
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isFound());
+
+        assertThat(imageRepository.findAll().size()).isEqualTo(1);
+    }
+
+    @Test
+    public void deleteImageByIdDeletedOneImage() throws Exception {
+        Image image1 = new Image().id(UUID.randomUUID()).description("To deleted");
+        image1 = imageRepository.saveAndFlush(image1);
+        Image image2 = new Image().id(UUID.randomUUID()).description("Test");
+        image2 = imageRepository.saveAndFlush(image2);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("login", "user");
+
+        mockMvc.perform(delete("/api/images/{id}", image1.getId())
+                        .with(oauth2Login().authorities(new OAuth2UserAuthority(map)))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isAccepted());
+
+        var foundImages = imageRepository.findAll();
+        assertThat(foundImages.size()).isEqualTo(1);
+        assertThat(foundImages.get(0).getId()).isEqualTo(image2.getId());
+    }
 }
